@@ -1,0 +1,53 @@
+graph TB
+    subgraph SOLACE["Solace Cloud (Message Broker)"]
+        QUEUE["Message Queue\nFPL 2012 · FIXM XML · NAS XML"]
+    end
+
+    subgraph PROXY["Proxy Server — Node.js"]
+        CONSUMER["Solace Consumer\nWebSocket connection"]
+        DEDUP["Dedup Engine\nDJB2 hash · 30 s window"]
+        MSGQ["In-Memory Queue\n200-message buffer"]
+        WS_SVR["WebSocket Server\nReal-time broadcast"]
+        HTTP_SVR["HTTP Server\nGET /api/messages\nCron batch (3 h)"]
+    end
+
+    subgraph FFICE["FF-ICE App — React + Vite"]
+        UI["Dual-Panel Editor\nConverter tab · FDPS Feed tab"]
+        AUTO["Format Auto-detect"]
+
+        subgraph PARSERS["Parsers & Generators"]
+            FPL_P["FPL Parser\nICAO 2012 text"]
+            FIXM_P["FIXM Parser\nICAO XML"]
+            NAS_P["NAS Parser\nFAA XML"]
+            FPL_G["FPL Generator"]
+            FIXM_G["FIXM Generator"]
+        end
+
+        subgraph ANALYSIS["Analysis"]
+            ROUTE["Route Parser\nWaypoints · Time Windows"]
+            CONFLICT["Conflict Detector\nVertical < 500 ft\nHorizontal < 2 nm\nTime-window overlap"]
+        end
+    end
+
+    subgraph DEMOSITE["Demo Site — React + Vite"]
+        SITE["Marketing Site\nHero · Features · Contact"]
+    end
+
+    QUEUE -->|WebSocket| CONSUMER
+    CONSUMER --> DEDUP
+    DEDUP --> MSGQ
+    MSGQ -->|"LOCAL=true\nreal-time"| WS_SVR
+    MSGQ -->|"LOCAL=false\nbatched"| HTTP_SVR
+    WS_SVR -->|ws://| UI
+    HTTP_SVR -->|HTTP poll| UI
+    UI --> AUTO
+    AUTO --> FPL_P
+    AUTO --> FIXM_P
+    AUTO --> NAS_P
+    FPL_P <-->|"round-trip\nconversion"| FIXM_G
+    FIXM_P <-->|"round-trip\nconversion"| FPL_G
+    FPL_P --> ROUTE
+    FIXM_P --> ROUTE
+    NAS_P --> ROUTE
+    ROUTE --> CONFLICT
+    CONFLICT -->|"AMBER alerts"| UI

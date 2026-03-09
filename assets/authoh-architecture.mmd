@@ -1,0 +1,46 @@
+graph TB
+    subgraph Client["Browser — Next.js Frontend"]
+        UI["React Pages\nLogin · Register · Dashboard\nItems · Storages · Users · Subscription"]
+        MW["Edge Middleware\nRoute Protection · MFA Enforcement"]
+    end
+
+    subgraph API["Next.js API Routes"]
+        AUTH["/api/auth/*\nRegister · Login · MFA · Refresh\nGoogle SSO · Password Reset"]
+        USERS["/api/users\nInvite · Manage"]
+        ITEMS["/api/items\nCRUD · Image Upload"]
+        SUBS["/api/subscriptions\nCheckout · Cancel · Invoices"]
+        WEBHOOK["/api/webhooks/stripe\nLifecycle Events"]
+    end
+
+    subgraph SVC["Service Layer"]
+        JWT["JWT Util\nAccess Token (30 min)\nRefresh Token (sliding window)"]
+        EMAIL["Email Service\nNodemailer\nVerification · MFA · Password Reset"]
+        BLOB["Azure Blob Service\nImage Upload · Delete\nSharp (resize)"]
+        STRIPE_SVC["Stripe Service\nCheckout · Webhooks · Invoices"]
+    end
+
+    subgraph EXT["External Services"]
+        GOOGLE["Google OAuth 2.0"]
+        STRIPE["Stripe\nPayments"]
+        SMTP["SMTP\nMailHog (dev)\nSendGrid / SES (prod)"]
+        AZURE_BLOB["Azure Blob Storage\nAzurite (dev)"]
+    end
+
+    DB[("PostgreSQL 16\n──────────────\ncompanies · users\nsubscriptions\nitems · item_images\nstorages · pending_invites")]
+
+    UI --> MW
+    MW -->|protected routes| API
+    AUTH --> JWT
+    AUTH --> EMAIL
+    AUTH --> GOOGLE
+    AUTH --> DB
+    USERS --> DB
+    ITEMS --> BLOB
+    ITEMS --> DB
+    SUBS --> STRIPE_SVC
+    WEBHOOK --> STRIPE_SVC
+    STRIPE_SVC --> DB
+    EMAIL --> SMTP
+    BLOB --> AZURE_BLOB
+    STRIPE_SVC --> STRIPE
+    JWT --> DB
