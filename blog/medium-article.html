@@ -1,106 +1,273 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>How to Trade Stocks Using Keras — John Oh</title>
-  <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
-  <link rel="stylesheet" href="../style.css" />
-  <link rel="stylesheet" href="medium-article.css" />
-</head>
-<body>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>How to Trade Stocks Using Keras — John Oh</title>
+        <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+        <link rel="stylesheet" href="../style.css" />
+        <link rel="stylesheet" href="medium-article.css" />
+    </head>
+    <body>
+        <header>
+            <a class="site-name" href="../index.html" aria-label="John Oh">
+                <img
+                    src="../assets/logo.svg"
+                    width="48"
+                    height="48"
+                    alt=""
+                    aria-hidden="true"
+                />
+            </a>
+            <nav>
+                <a href="../index.html#projects">Projects</a>
+                <a
+                    href="https://drive.google.com/file/d/1fkqfEm1NpIDRGMCoD5Uh-xd0rkXvw6uc/view?usp=drive_link"
+                    target="_blank"
+                    rel="noopener"
+                    >Resume</a
+                >
+                <a href="../index.html#blog">Blog</a>
+                <a
+                    class="nav-icon"
+                    href="https://github.com/johnoh26"
+                    target="_blank"
+                    rel="noopener"
+                    aria-label="GitHub"
+                >
+                    <svg
+                        width="20"
+                        height="20"
+                        aria-hidden="true"
+                        fill="currentColor"
+                    >
+                        <use href="../assets/icons.svg#github"></use>
+                    </svg>
+                </a>
+                <a
+                    class="nav-icon"
+                    href="https://linkedin.com/in/johnoh26"
+                    target="_blank"
+                    rel="noopener"
+                    aria-label="LinkedIn"
+                >
+                    <svg
+                        width="20"
+                        height="20"
+                        aria-hidden="true"
+                        fill="currentColor"
+                    >
+                        <use href="../assets/icons.svg#linkedin"></use>
+                    </svg>
+                </a>
+            </nav>
+        </header>
 
-  <header>
-    <a class="site-name" href="../index.html" aria-label="John Oh">
-      <img src="../assets/logo.svg" width="48" height="48" alt="" aria-hidden="true" />
-    </a>
-    <nav>
-      <a href="../index.html#projects">Projects</a>
-      <a href="https://drive.google.com/file/d/1GHyvgiOmTtVBsCVSa7D1Qg2J0_3Vo4Ai/view?usp=drive_link" target="_blank" rel="noopener">Resume</a>
-      <a href="../index.html#blog">Blog</a>
-      <a class="nav-icon" href="https://github.com/johnoh26" target="_blank" rel="noopener" aria-label="GitHub">
-        <svg width="20" height="20" aria-hidden="true" fill="currentColor">
-          <use href="../assets/icons.svg#github"></use>
-        </svg>
-      </a>
-      <a class="nav-icon" href="https://linkedin.com/in/johnoh26" target="_blank" rel="noopener" aria-label="LinkedIn">
-        <svg width="20" height="20" aria-hidden="true" fill="currentColor">
-          <use href="../assets/icons.svg#linkedin"></use>
-        </svg>
-      </a>
-    </nav>
-  </header>
+        <article>
+            <a class="back-link" href="../index.html#blog">← All posts</a>
+            <p class="post-meta">2020</p>
+            <h1>
+                How to Trade Stocks Using Keras (Machine Learning), Explained in
+                Plain English
+            </h1>
 
-  <article>
-    <a class="back-link" href="../index.html#blog">← All posts</a>
-    <p class="post-meta">2020</p>
-    <h1>How to Trade Stocks Using Keras (Machine Learning), Explained in Plain English</h1>
+            <img
+                class="cover-image"
+                src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=1200&q=80"
+                alt="Stock market data on a screen"
+            />
 
-    <img
-      class="cover-image"
-      src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=1200&q=80"
-      alt="Stock market data on a screen"
-    />
+            <div class="post-body">
+                <p class="ldr">
+                    <strong>LDR:</strong> In stock markets, past performance is
+                    not always a good predictor of future returns, and this
+                    makes predicting stock prices using machine learning
+                    difficult. Nonetheless, you can find my attempt
+                    <a
+                        href="https://medium.com/@john.oh26/how-to-trade-stocks-using-keras-machine-learning-explained-in-plain-english-cef3b22a35e7"
+                        target="_blank"
+                        rel="noopener"
+                        >here</a
+                    >.
+                </p>
 
-    <div class="post-body">
-      <p class="ldr"><strong>LDR:</strong> In stock markets, past performance is not always a good predictor of future returns, and this makes predicting stock prices using machine learning difficult. Nonetheless, you can find my attempt <a href="https://medium.com/@john.oh26/how-to-trade-stocks-using-keras-machine-learning-explained-in-plain-english-cef3b22a35e7" target="_blank" rel="noopener">here</a>.</p>
+                <p><em>Prerequisite: familiarity with Python</em></p>
 
-      <p><em>Prerequisite: familiarity with Python</em></p>
+                <p>
+                    Machine learning (ML) can be difficult to comprehend due to
+                    the jargon and math involved. In this article, I am going to
+                    try to stay as simple and DRY as possible, meaning I will
+                    make references to existing resources wherever applicable,
+                    rather than rewriting them. I incorporated the questions
+                    that I had when I was studying this topic. By the end of the
+                    article, I hope you can (1) gain a general understanding of
+                    how ML works and (2) build a simple stock trading ML
+                    algorithm. Note that it is not our goal to make profit at
+                    this time — our first step is to apply ML to predict stock
+                    prices. Hope this helps!
+                </p>
 
-      <p>Machine learning (ML) can be difficult to comprehend due to the jargon and math involved. In this article, I am going to try to stay as simple and DRY as possible, meaning I will make references to existing resources wherever applicable, rather than rewriting them. I incorporated the questions that I had when I was studying this topic. By the end of the article, I hope you can (1) gain a general understanding of how ML works and (2) build a simple stock trading ML algorithm. Note that it is not our goal to make profit at this time — our first step is to apply ML to predict stock prices. Hope this helps!</p>
+                <p>
+                    Let's dive right in and take a look at the typical structure
+                    of a machine learning algorithm. We are assuming that you
+                    are using Keras.
+                </p>
 
-      <p>Let's dive right in and take a look at the typical structure of a machine learning algorithm. We are assuming that you are using Keras.</p>
+                <h2>Phase 1. What are the inputs?</h2>
 
-      <h2>Phase 1. What are the inputs?</h2>
+                <p>
+                    <strong>Data Preparation.</strong> For analyzing stock data,
+                    incorporating Long Short-Term Memory (LSTM) layers would
+                    make the most sense, because it retains the memory of prior
+                    time series data, whereas having only Dense layers would
+                    allow gaining insight only from its immediate past.
+                </p>
 
-      <p><strong>Data Preparation.</strong> For analyzing stock data, incorporating Long Short-Term Memory (LSTM) layers would make the most sense, because it retains the memory of prior time series data, whereas having only Dense layers would allow gaining insight only from its immediate past.</p>
+                <p>
+                    All you need to know for this step is that depending on
+                    which model (e.g. Dense, LSTM, etc.) you choose, you might
+                    have to reshape the input to 3 dimensions. If we have 2D
+                    data, we can reshape it to 3D with:
+                </p>
 
-      <p>All you need to know for this step is that depending on which model (e.g. Dense, LSTM, etc.) you choose, you might have to reshape the input to 3 dimensions. If we have 2D data, we can reshape it to 3D with:</p>
+                <pre><code>2D_train_data = np.reshape(2D_train_data, (2D_train_data.shape[0], 2D_train_data.shape[1], 1))</code></pre>
 
-      <pre><code>2D_train_data = np.reshape(2D_train_data, (2D_train_data.shape[0], 2D_train_data.shape[1], 1))</code></pre>
+                <p>
+                    For example, we can represent minute-by-minute stock data in
+                    3D where the 1st axis shows the stock price of different
+                    companies, the 2nd axis displays the per-minute stock price,
+                    and the 3rd axis represents different days' data.
+                </p>
 
-      <p>For example, we can represent minute-by-minute stock data in 3D where the 1st axis shows the stock price of different companies, the 2nd axis displays the per-minute stock price, and the 3rd axis represents different days' data.</p>
+                <p>
+                    There is no magic to prepping data. Keras documentation is
+                    great and explains the input/output specifications clearly.
+                    Scikit-Learn is a useful Python module for standardizing
+                    input data, and if necessary, you can use Yahoo Finance or a
+                    data provider like Quandl to gather stock price data to
+                    train the model.
+                </p>
 
-      <p>There is no magic to prepping data. Keras documentation is great and explains the input/output specifications clearly. Scikit-Learn is a useful Python module for standardizing input data, and if necessary, you can use Yahoo Finance or a data provider like Quandl to gather stock price data to train the model.</p>
+                <p>
+                    Once data preparation is complete, we have to answer three
+                    questions: (1) what layers are we going to use, (2) how many
+                    should we use, and (3) what loss function and optimizer
+                    should we use?
+                </p>
 
-      <p>Once data preparation is complete, we have to answer three questions: (1) what layers are we going to use, (2) how many should we use, and (3) what loss function and optimizer should we use?</p>
+                <h2>Phase 2. The journey of the inputs</h2>
 
-      <h2>Phase 2. The journey of the inputs</h2>
+                <p>This part is where the magic happens!</p>
 
-      <p>This part is where the magic happens!</p>
+                <p>
+                    <strong>Layers.</strong> This is the core building block of
+                    neural networks. You can think of layers as filters that
+                    data passes through to become more refined. There are many
+                    types: core layers, convolution layers, recurrent layers,
+                    and so on. LSTM and GRU fall under recurrent layers; Dense
+                    falls under core layers. At each layer you have "weights"
+                    which the optimizer updates to minimize the loss.
+                </p>
 
-      <p><strong>Layers.</strong> This is the core building block of neural networks. You can think of layers as filters that data passes through to become more refined. There are many types: core layers, convolution layers, recurrent layers, and so on. LSTM and GRU fall under recurrent layers; Dense falls under core layers. At each layer you have "weights" which the optimizer updates to minimize the loss.</p>
+                <p>
+                    <strong
+                        >Question&gt; Do more layers lead to better
+                        results?</strong
+                    >
+                    Not necessarily. Implementing more layers can lead to
+                    overfitting, which means the model memorizes the training
+                    data and does not generalize well to test data — in other
+                    words, it would not predict stock prices accurately.
+                </p>
 
-      <p><strong>Question&gt; Do more layers lead to better results?</strong> Not necessarily. Implementing more layers can lead to overfitting, which means the model memorizes the training data and does not generalize well to test data — in other words, it would not predict stock prices accurately.</p>
+                <p>
+                    <strong>Loss function.</strong> Its basic job is to compare
+                    the model's output to the expected results and measure the
+                    error. Common loss functions include mean squared error
+                    (MSE), mean absolute error (MAE), categorical crossentropy,
+                    and binary crossentropy.
+                </p>
 
-      <p><strong>Loss function.</strong> Its basic job is to compare the model's output to the expected results and measure the error. Common loss functions include mean squared error (MSE), mean absolute error (MAE), categorical crossentropy, and binary crossentropy.</p>
+                <p>
+                    When trading stocks, being off by $5 is exactly 5 times
+                    worse than being off by $1, so MAE makes sense here. While
+                    training, the loss starts near random (~50% correct). As the
+                    model trains over many "epochs" it learns to minimize the
+                    loss — this is where the optimizer comes in.
+                </p>
 
-      <p>When trading stocks, being off by $5 is exactly 5 times worse than being off by $1, so MAE makes sense here. While training, the loss starts near random (~50% correct). As the model trains over many "epochs" it learns to minimize the loss — this is where the optimizer comes in.</p>
+                <p>
+                    <strong>Optimizer.</strong> It uses gradient descent to
+                    update weights and biases each epoch, lowering the loss. If
+                    you remember calculus, we find a minimum by looking for
+                    where the derivative equals zero. Your initial loss might be
+                    at a high point on the curve; the optimizer checks the
+                    gradient and steps the weights in the direction that reduces
+                    loss. The size of each step is the "learning rate". This
+                    iteratively lowers training error — but can lead to
+                    overfitting if taken too far.
+                </p>
 
-      <p><strong>Optimizer.</strong> It uses gradient descent to update weights and biases each epoch, lowering the loss. If you remember calculus, we find a minimum by looking for where the derivative equals zero. Your initial loss might be at a high point on the curve; the optimizer checks the gradient and steps the weights in the direction that reduces loss. The size of each step is the "learning rate". This iteratively lowers training error — but can lead to overfitting if taken too far.</p>
+                <h2>Phase 3. What now?</h2>
 
-      <h2>Phase 3. What now?</h2>
+                <p>
+                    <strong>Evaluation.</strong> We can evaluate loss across
+                    different epoch counts using the History object, which
+                    contains a dictionary of training metrics. Graphing
+                    historical loss shows how many epochs minimize overfitting.
+                    Overfitting causes poor performance on test data, so finding
+                    that sweet spot matters.
+                </p>
 
-      <p><strong>Evaluation.</strong> We can evaluate loss across different epoch counts using the History object, which contains a dictionary of training metrics. Graphing historical loss shows how many epochs minimize overfitting. Overfitting causes poor performance on test data, so finding that sweet spot matters.</p>
+                <p>
+                    At this point, feel free to experiment — tweak the code, try
+                    new models, different epochs and batch sizes. It may sound
+                    ironic, but this not-so-scientific process is why some
+                    experts say machine learning is currently more art than
+                    science.
+                </p>
 
-      <p>At this point, feel free to experiment — tweak the code, try new models, different epochs and batch sizes. It may sound ironic, but this not-so-scientific process is why some experts say machine learning is currently more art than science.</p>
+                <p>
+                    <strong>Implementation using Robinhood.</strong> For a code
+                    example using the Robinhood module, refer to
+                    <em
+                        >Step by Step: Building an Automated Trading System in
+                        Robinhood</em
+                    >. Note that you will need a Robinhood account to complete
+                    this step.
+                </p>
 
-      <p><strong>Implementation using Robinhood.</strong> For a code example using the Robinhood module, refer to <em>Step by Step: Building an Automated Trading System in Robinhood</em>. Note that you will need a Robinhood account to complete this step.</p>
+                <h2>Conclusion</h2>
 
-      <h2>Conclusion</h2>
+                <p>
+                    I hope this article helped solidify your understanding of a
+                    typical machine learning algorithm structure using Keras. If
+                    you'd like to go deeper, I strongly recommend
+                    <em>Deep Learning with Python</em> by François Chollet and
+                    <em
+                        >Algorithmic financial trading with deep convolutional
+                        neural networks: Time series to image conversion
+                        approach</em
+                    >
+                    by Omer Berat Sezer and Ahmet Murat Ozbayoglu.
+                </p>
 
-      <p>I hope this article helped solidify your understanding of a typical machine learning algorithm structure using Keras. If you'd like to go deeper, I strongly recommend <em>Deep Learning with Python</em> by François Chollet and <em>Algorithmic financial trading with deep convolutional neural networks: Time series to image conversion approach</em> by Omer Berat Sezer and Ahmet Murat Ozbayoglu.</p>
+                <a
+                    class="read-on-medium"
+                    href="https://medium.com/@john.oh26/how-to-trade-stocks-using-keras-machine-learning-explained-in-plain-english-cef3b22a35e7"
+                    target="_blank"
+                    rel="noopener"
+                >
+                    Read on Medium →
+                </a>
+            </div>
+        </article>
 
-      <a class="read-on-medium" href="https://medium.com/@john.oh26/how-to-trade-stocks-using-keras-machine-learning-explained-in-plain-english-cef3b22a35e7" target="_blank" rel="noopener">
-        Read on Medium →
-      </a>
-    </div>
-  </article>
-
-  <footer>
-    <span>© 2026 John Oh</span>
-    <a href="https://github.com/johnoh26" target="_blank" rel="noopener">GitHub</a>
-  </footer>
-
-</body>
+        <footer>
+            <span>© 2026 John Oh</span>
+            <a href="https://github.com/johnoh26" target="_blank" rel="noopener"
+                >GitHub</a
+            >
+        </footer>
+    </body>
 </html>
